@@ -1,4 +1,7 @@
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.StringJoiner;
 import java.util.stream.Collectors;
 
 public class WordFrequencyGame {
@@ -6,23 +9,32 @@ public class WordFrequencyGame {
     public static final String INPUT_SEPARATOR = "\\s+";
     public static final String CALCULATE_ERROR = "Calculate Error";
 
-    public String getResult(String inputStr) {
+    public String getResult(String sentence) {
 
         try {
-            List<Word> wordList = getSortedDistinctWords(inputStr);
+            List<Word> wordList = getDistinctWords(sentence);
 
-            StringJoiner joiner = new StringJoiner("\n");
-            for (Word w : wordList) {
-                String s = w.getValue() + " " +w.getWordCount();
-                joiner.add(s);
-            }
-            return joiner.toString();
+            List<Word> sortedList = wordList.stream()
+                    .sorted((word1, word2) -> word2.getWordCount() - word1.getWordCount())
+                    .collect(Collectors.toList());
+
+            return convertWordFrequencyString(sortedList).toString();
         } catch (Exception e) {
             return CALCULATE_ERROR;
         }
     }
 
-    private List<Word> getSortedDistinctWords(String inputStr) {
+    private StringJoiner convertWordFrequencyString(List<Word> sortedList) {
+        StringJoiner joiner = new StringJoiner("\n");
+        sortedList.forEach(word -> {
+            String frequencyString = String.format("%s %s", word.getValue(), word.getWordCount());
+            joiner.add(frequencyString);
+        });
+
+        return joiner;
+    }
+
+    private List<Word> getDistinctWords(String inputStr) {
         List<String> words = Arrays.asList(inputStr.split(INPUT_SEPARATOR));
         List<String> distinctWords = words.stream().distinct().collect(Collectors.toList());
 
@@ -33,9 +45,7 @@ public class WordFrequencyGame {
             wordList.add(word);
         });
 
-        return wordList.stream()
-                .sorted((word1, word2)->word2.getWordCount() - word1.getWordCount())
-                .collect(Collectors.toList());
+        return wordList;
     }
 
 }
