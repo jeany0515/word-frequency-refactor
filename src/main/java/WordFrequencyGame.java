@@ -9,9 +9,7 @@ public class WordFrequencyGame {
     public String getResult(String inputStr) {
 
         try {
-            List<Word> wordList = getDistinctWords(inputStr);
-
-            wordList.sort((w1, w2) -> w2.getWordCount() - w1.getWordCount());
+            List<Word> wordList = getSortedDistinctWords(inputStr);
 
             StringJoiner joiner = new StringJoiner("\n");
             for (Word w : wordList) {
@@ -24,7 +22,7 @@ public class WordFrequencyGame {
         }
     }
 
-    private List<Word> getDistinctWords(String inputStr) {
+    private List<Word> getSortedDistinctWords(String inputStr) {
         List<String> words = Arrays.asList(inputStr.split(INPUT_SEPARATOR));
         List<String> distinctWords = words.stream().distinct().collect(Collectors.toList());
 
@@ -35,7 +33,9 @@ public class WordFrequencyGame {
             wordList.add(word);
         });
 
-        return wordList;
+        return wordList.stream()
+                .sorted((word1, word2)->word2.getWordCount() - word1.getWordCount())
+                .collect(Collectors.toList());
     }
 
 }
