@@ -15,7 +15,7 @@ public class WordFrequencyGame {
             List<Word> wordList = getDistinctWords(sentence);
 
             List<Word> sortedList = wordList.stream()
-                    .sorted((word1, word2) -> word2.getWordCount() - word1.getWordCount())
+                    .sorted((word1, word2) -> word2.getCount() - word1.getCount())
                     .collect(Collectors.toList());
 
             return convertWordFrequencyString(sortedList).toString();
@@ -27,7 +27,7 @@ public class WordFrequencyGame {
     private StringJoiner convertWordFrequencyString(List<Word> sortedList) {
         StringJoiner joiner = new StringJoiner("\n");
         sortedList.forEach(word -> {
-            String frequencyString = String.format("%s %s", word.getValue(), word.getWordCount());
+            String frequencyString = String.format("%s %s", word.getValue(), word.getCount());
             joiner.add(frequencyString);
         });
 
